@@ -522,7 +522,11 @@ class NimGenerator(Generator):
     def write_enum(self, fobj, name, value, type='GLenum'):
         fobj.write('  {}*'.format(self.map_enum_name(name)))
         if type:
-          fobj.write(': {0} = {0}({1})'.format(type, value))
+          if type == 'uint32' or type == 'uint64':
+            suffix = '\'u' + type[-2:]
+            fobj.write(': {0} = {1}{2}'.format(type, value, suffix))
+          else:
+            fobj.write(': {0} = {0}({1})'.format(type, value))
         else:
           fobj.write(' = {}'.format(value))
         fobj.write('\n')
